@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 
 import os
 from Tkinter import *
@@ -6,13 +6,15 @@ from PIL import Image, ImageTk
 from tkMessageBox import showwarning
 import tkFileDialog
 import re
-
-img =None
-i=0;
-s = None
-dirs = None
-li_name=["_ddd","_jjj"]
-is_rename=0
+import sys
+reload(sys)
+sys.setdefaultencoding( "utf-8" )
+img =None #图片显示
+i=0; #记录当前在目录中的位置
+img_path = None# 要显示的图片的路径
+dirs = None#文件夹目录
+li_name=["_ddd","_jjj"]#用于存放使用过的所有文件名
+is_rename=0 #是否进行重命名
 
 class Application(Frame):
         def __init__(self, master=None):
@@ -36,6 +38,7 @@ class Application(Frame):
             self.nameInput.grid(row=2,column=2)
             self.quitButton = Button(self, text="确定", font=(16), command=self.rename)
             self.quitButton.grid(row=2,column=3)
+        #显示图片函数
         def showImg(self):
             global img
             load = Image.open(s)
@@ -44,6 +47,7 @@ class Application(Frame):
             img.image = render
             img.grid(row=3,columnspan=10)
             return img
+        #重命名函数
         def rename(self):
             global i
             global s
@@ -73,8 +77,8 @@ class Application(Frame):
                         is_rename = 1
                         showwarning("提示","修改已全部完成！")
                 else:
-                        s=self.E_path.get()+os.sep+dirs[i]
-                        load = Image.open(s)
+                        img_path=self.E_path.get()+os.sep+dirs[i]
+                        load = Image.open(img_path)
                         render= ImageTk.PhotoImage(load)
                         img.configure(image = render)
                         img.image = render
@@ -104,10 +108,13 @@ class Application(Frame):
                 showwarning("警告","警告：您所选择的图片个数不为3的倍数\n重命名后文件名可能发生错乱\n请修改文件夹后重试")
                 is_show = 0
             if is_show == 1:
+                li_name=["_ddd","_jjj"]
+                is_rename=1
                 for file in dirs:
                         li_name.append(str(file))
                 self.showImg()
-            
+                
+
 app =Application()
 app.master.title("REname")
 app.master.geometry("900x900")
